@@ -1,0 +1,6 @@
+-   id: make-some-noise
+    name: Make Some Noise
+    description: (Currently windows only) Plays a sound if the other hooks all passed, 
+    entry: python ./make_some_noise.py
+    files: '.*'
+    language: python
