@@ -4,7 +4,6 @@
 
 from __future__ import annotations
 
-import os
 import subprocess
 import sys
 
@@ -13,6 +12,11 @@ def err(s: str) -> None:
     print(s, file=sys.stderr)
 
 
+print("argv:")
+for arg in sys.argv:
+    print(arg)
+print("done")
+
 # There are many ways we could search for the string "DO NOT SUBMIT", but `git
 # grep --no-index` is nice because
 #  - it's very fast (as compared to iterating over the file in Python)
@@ -20,7 +24,14 @@ def err(s: str) -> None:
 #  - unlike plain grep, which is slower and has different flags on MacOS versus
 #    Linux, git grep is always the same.
 res = subprocess.run(
-    ["git", "grep", "-Hn", "--no-index", "DO NOT SUBMIT", *sys.argv[1:]],
+    [
+        ".pre-commit/make_some_noise",
+        "grep",
+        "-Hn",
+        "--no-index",
+        "DO NOT SUBMIT",
+        *sys.argv[1:],
+    ],
     capture_output=True,
 )
 if res.returncode == 0:
