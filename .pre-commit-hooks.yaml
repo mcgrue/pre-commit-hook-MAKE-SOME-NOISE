@@ -1,0 +1,153 @@
+-   id: bazel-buildifier
+    name: bazel buildifier
+    description: Runs `buildifier`, requires buildifier binary
+    entry: buildifier
+    files: '^(.*/)?(BUILD\.bazel|BUILD|WORKSPACE)$|\.BUILD$|\.bzl$'
+    language: system
+
+-   id: do-not-submit
+    name: DO NOT SUBMIT
+    description: Forbids the string "DO NOT SUBMIT".
+    entry: check_do_not_submit.py
+    language: script
+    files: '.*'
+
+-   id: clang-format-diff
+    name: clang-format-diff
+    entry: clang_format.py
+    language: script
+    args: ['15.0.0','diff']
+    require_serial: true
+
+
+    # git-clang-format does not take kindly to being run in parallel; it writes
+    # to a speicfic file in .git.
+    #
+    # TODO: Can we fix git-clang-format so it's parallel-friendly?
+
+    # Fun fact, clang-format can format more than just C and C++!
+    #
+    # Less-fun fact, "types: [c, c++]" means "files that are C *and* C++", i.e.
+    # ".h" files.  If you want to clang-format your C and C++ code, AFAICT
+    # you'll need separate rules.  Or I guess you can use a "files:" regexp.
+    #
+    # See README.md for usage examples.
+
+-   id: clang-format-whole-file
+    name: clang-format-whole-file
+    entry: clang_format.py
+    language: script
+    args: ['15.0.0','whole-file']
+    require_serial: false
+
+-   id: clang-format-diff-3.6.0
+    name: clang-format-diff-3.6.0
+    entry: clang_format.py
+    language: script
+    args: ['3.6.0','diff']
+    require_serial: true
+
+-   id: clang-format-whole-file-3.6.0
+    name: clang-format-whole-file-3.6.0
+    entry: clang_format.py
+    language: script
+    args: ['3.6.0','whole-file']
+    require_serial: false
+
+-   id: clang-format-diff-3.7.0
+    name: clang-format-diff-3.7.0
+    entry: clang_format.py
+    language: script
+    args: ['3.7.0','diff']
+    require_serial: true
+
+-   id: clang-format-whole-file-3.8.0
+    name: clang-format-whole-file-3.8.0
+    entry: clang_format.py
+    language: script
+    args: ['3.8.0','whole-file']
+    require_serial: false
+
+-   id: clang-format-diff-3.9.0
+    name: clang-format-diff-3.9.0
+    entry: clang_format.py
+    language: script
+    args: ['3.9.0','diff']
+    require_serial: true
+
+-   id: clang-format-whole-file-3.9.0
+    name: clang-format-whole-file-3.9.0
+    entry: clang_format.py
+    language: script
+    args: ['3.9.0','whole-file']
+    require_serial: false
+
+-   id: clang-format-diff-4.0.0
+    name: clang-format-diff-4.0.0
+    entry: clang_format.py
+    language: script
+    args: ['4.0.0','diff']
+    require_serial: true
+
+-   id: clang-format-whole-file-4.0.0
+    name: clang-format-whole-file-4.0.0
+    entry: clang_format.py
+    language: script
+    args: ['4.0.0','whole-file']
+    require_serial: false
+
+-   id: clang-format-diff-5.0.0
+    name: clang-format-diff-5.0.0
+    entry: clang_format.py
+    language: script
+    args: ['5.0.0','diff']
+    require_serial: true
+
+-   id: clang-format-whole-file-5.0.0
+    name: clang-format-whole-file-5.0.0
+    entry: clang_format.py
+    language: script
+    args: ['5.0.0','whole-file']
+    require_serial: false
+
+-   id: clang-format-diff-8.0.0
+    name: clang-format-diff-8.0.0
+    entry: clang_format.py
+    language: script
+    args: ['8.0.0','diff']
+    require_serial: true
+
+-   id: clang-format-whole-file-8.0.0
+    name: clang-format-whole-file-8.0.0
+    entry: clang_format.py
+    language: script
+    args: ['8.0.0','whole-file']
+    require_serial: false
+
+-   id: clang-format-diff-11.0.0
+    name: clang-format-diff-11.0.0
+    entry: clang_format.py
+    language: script
+    args: ['11.0.0','diff']
+    require_serial: true
+
+-   id: clang-format-whole-file-11.0.0
+    name: clang-format-whole-file-11.0.0
+    entry: clang_format.py
+    language: script
+    args: ['11.0.0','whole-file']
+    require_serial: false
+    
+-   id: clang-format-diff-15.0.0
+    name: clang-format-diff-15.0.0
+    entry: clang_format.py
+    language: script
+    args: ['15.0.0','diff']
+    require_serial: true
+
+-   id: clang-format-whole-file-15.0.0
+    name: clang-format-whole-file-15.0.0
+    entry: clang_format.py
+    language: script
+    args: ['15.0.0','whole-file']
+    require_serial: false
