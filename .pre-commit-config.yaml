@@ -17,6 +17,11 @@ repos:
     hooks:
       - id: flake8
         args: [ "--max-line-length=88" ]
+  - repo: .
+    rev: HEAD
+    hooks:
+      - id: make-some-noise
+        args: []
 
 exclude: |
   (?x)(
