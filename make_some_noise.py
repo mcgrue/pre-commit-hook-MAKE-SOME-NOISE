@@ -26,6 +26,8 @@ import platform
 import subprocess
 import sys
 
+script_filepath = os.path.abspath(__file__)
+
 windows_player_path = ".pre-commit/make_some_noise/cmdmp3.exe"
 pass_wav_path = ".pre-commit/make_some_noise/pass.wav"
 fail_wav_path = ".pre-commit/make_some_noise/fail.wav"
@@ -33,7 +35,9 @@ error_wav_path = ".pre-commit/make_some_noise/error.wav"
 
 
 def check_path(fname):
-    absolute_path = os.path.abspath(fname)
+    script_filepath = os.path.dirname(os.path.abspath(__file__))
+    absolute_path = os.path.join(script_filepath, fname)
+
     if os.path.isfile(absolute_path):
         return True
     else:
