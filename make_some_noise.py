@@ -5,7 +5,7 @@
 Plays a third sound if the pre-requisites are bad.
 
 This hook will only fail if its prerequisites arent met.  Which are currently:
-    1. to have an unofficial fork of pre-commit installed.
+    1. to have an unofficial fork of pre-commit installed
     2. to be the last hook installed for your repo
     3. if the required sound-playing exe or wavs are not at the expected path
     4. if the sound player is not executable by this process
