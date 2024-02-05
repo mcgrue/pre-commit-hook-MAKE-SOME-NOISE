@@ -39,11 +39,11 @@ def check_path(fname):
     absolute_path = os.path.join(script_filepath, fname)
 
     if os.path.isfile(absolute_path):
-        return True
+        return absolute_path
     else:
         # File doesn't exist, output an error with the absolute path
         print(f"Error: File not found at {absolute_path}")
-        return False
+        return ""
 
 
 def check_executable(filepath):
@@ -67,11 +67,16 @@ if not is_windows():
     )
     sys.exit(5)
 
+windows_player_path = check_path(windows_player_path)
+pass_wav_path = check_path(pass_wav_path)
+fail_wav_path = check_path(fail_wav_path)
+error_wav_path = check_path(error_wav_path)
+
 required_files_exist = True
-required_files_exist &= check_path(windows_player_path)
-required_files_exist &= check_path(pass_wav_path)
-required_files_exist &= check_path(fail_wav_path)
-required_files_exist &= check_path(error_wav_path)
+required_files_exist &= windows_player_path != ""
+required_files_exist &= pass_wav_path != ""
+required_files_exist &= fail_wav_path != ""
+required_files_exist &= error_wav_path != ""
 
 if not required_files_exist:
     print("Required files are missing. Failing")
