@@ -30,6 +30,7 @@ script_filepath = os.path.abspath(__file__)
 
 windows_player_path = ".pre-commit/make_some_noise/cmdmp3.exe"
 osx_player_cmd = "afplay"
+linux_player_cmd = "aplay"
 pass_wav_path = ".pre-commit/make_some_noise/pass.wav"
 fail_wav_path = ".pre-commit/make_some_noise/fail.wav"
 error_wav_path = ".pre-commit/make_some_noise/error.wav"
@@ -56,20 +57,22 @@ def check_executable(filepath):
     # File is executable, return True or perform additional actions
     return True
 
+def is_linux():
+    system_platform = platform.system()
+    return system_platform == "Linux"
 
 def is_windows():
     system_platform = platform.system()
     return system_platform == "Windows"
-
 
 def is_mac():
     system_platform = platform.system()
     return system_platform == "Darwin"
 
 
-if not (is_windows() or is_mac()):
+if not (is_windows() or is_mac() or is_linux()):
     print(
-        "The current OS is not windows, which is the only supported OS at this time. Failing"
+        "The current OS ("+platform.system()+") is not supported at this time. Failing"
     )
     sys.exit(5)
 
@@ -109,19 +112,21 @@ def play_sound(wav):
             [osx_player_cmd, wav, "&"],
             capture_output=True,
         )
+    if is_linux():
+        res = subprocess.run(
+            [linux_player_cmd, wav, "&"],
+            capture_output=True,
+        )
 
 
 def play_pass():
     play_sound(pass_wav_path)
 
-
 def play_fail():
     play_sound(fail_wav_path)
 
-
 def play_error():
     play_sound(error_wav_path)
-
 
 def env_check(name):
     if name in os.environ:
@@ -144,7 +149,6 @@ if not is_valid:
     play_error()
     sys.exit(1)
 
-
 def converter(name):
     try:
         return int(os.environ[name])
@@ -162,7 +166,7 @@ if idx == -1 or total == -1 or retval == -1:
     play_error()
     sys.exit(2)
 
-if(is_mac()):
+if(is_mac() or is_linux()): #linux and macs report reverse order?
     if idx != 0:
         print(
             f"This hook was not the last pre-commit hook installed, which it needs to be. failing"
