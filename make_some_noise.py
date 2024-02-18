@@ -29,6 +29,7 @@ import sys
 script_filepath = os.path.abspath(__file__)
 
 windows_player_path = ".pre-commit/make_some_noise/cmdmp3.exe"
+osx_player_cmd = "afplay"
 pass_wav_path = ".pre-commit/make_some_noise/pass.wav"
 fail_wav_path = ".pre-commit/make_some_noise/fail.wav"
 error_wav_path = ".pre-commit/make_some_noise/error.wav"
@@ -61,19 +62,29 @@ def is_windows():
     return system_platform == "Windows"
 
 
-if not is_windows():
+def is_mac():
+    system_platform = platform.system()
+    return system_platform == "Darwin"
+
+
+if not (is_windows() or is_mac()):
     print(
         "The current OS is not windows, which is the only supported OS at this time. Failing"
     )
     sys.exit(5)
 
-windows_player_path = check_path(windows_player_path)
+if is_windows():
+    windows_player_path = check_path(windows_player_path)
+
 pass_wav_path = check_path(pass_wav_path)
 fail_wav_path = check_path(fail_wav_path)
 error_wav_path = check_path(error_wav_path)
 
 required_files_exist = True
-required_files_exist &= windows_player_path != ""
+
+if is_windows():
+    required_files_exist &= windows_player_path != ""
+
 required_files_exist &= pass_wav_path != ""
 required_files_exist &= fail_wav_path != ""
 required_files_exist &= error_wav_path != ""
@@ -82,16 +93,22 @@ if not required_files_exist:
     print("Required files are missing. Failing")
     sys.exit(3)
 
-if not check_executable(windows_player_path):
+if is_windows() and not check_executable(windows_player_path):
     print("The soundplaying exe is not executable. Failing")
     sys.exit(4)
 
 
 def play_sound(wav):
-    res = subprocess.run(
-        [windows_player_path, wav],
-        capture_output=True,
-    )
+    if is_windows():
+        res = subprocess.run(
+            [windows_player_path, wav],
+            capture_output=True,
+        )
+    if is_mac():
+        res = subprocess.run(
+            [osx_player_cmd, wav, "&"],
+            capture_output=True,
+        )
 
 
 def play_pass():
@@ -145,12 +162,20 @@ if idx == -1 or total == -1 or retval == -1:
     play_error()
     sys.exit(2)
 
-if idx != total - 1:
-    print(
-        f"This hook was not the past pre-commit hook installed, which it needs to be. Currently reporting {idx+1} out of {total}. failing"
-    )
-    play_error()
-    sys.exit(6)
+if(is_mac()):
+    if idx != 0:
+        print(
+            f"This hook was not the last pre-commit hook installed, which it needs to be. failing"
+        )
+        play_error()
+        sys.exit(7)
+else:
+    if idx != total - 1:
+        print(
+            f"This hook was not the last pre-commit hook installed, which it needs to be. Currently reporting {idx+1} out of {total}. failing"
+        )
+        play_error()
+        sys.exit(6)
 
 if retval == 0:
     play_pass()
