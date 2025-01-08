@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Current File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "args": ["--url-alive", "http://SWORDFISH:22222", "--url-fail", "http://SWORDFISH:22222/DOCTEST_ASSERT_FAIL", "--url-pass", "http://SWORDFISH:22222/DOCTEST_ALL_TESTS_PASS"]
+    }
+  ]
+}
