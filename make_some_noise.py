@@ -21,6 +21,7 @@ def parse_args():
     parser.add_argument("--url-alive", type=str, help="URL to check if alive")
     parser.add_argument("--url-fail", type=str, help="URL to check if fail")
     parser.add_argument("--url-pass", type=str, help="URL to check if pass")
+    parser.add_argument("--url-error", type=str, help="URL to check if error")
 
     args = parser.parse_args()
     return args
