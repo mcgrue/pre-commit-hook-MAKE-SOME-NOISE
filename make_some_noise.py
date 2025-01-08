@@ -1,30 +1,80 @@
 #!/usr/bin/env python
 
-""" Attempts to play a good sound if all previous pre-commit hooks passed and a bad sound if they failed
+""" Attempts to hit one of three soundboard server endpoints based on the status of the current pre-commit hook.
 
-Plays a third sound if the pre-requisites are bad.
-
-This hook will only fail if its prerequisites arent met.  Which are currently:
-    1. to have an unofficial fork of pre-commit installed
-    2. to be the last hook installed for your repo
-    3. if the required sound-playing exe or wavs are not at the expected path
-    4. if the sound player is not executable by this process
-    5. if the current OS is not windows
-
-Fork available at https://github.com/breadbros/pre-commit/tree/new_environment_variables
-
-Currently only works for windows
-
-cmdmp3.exe from https://github.com/jimlawless/cmdmp3 and is used here under the MIT License
-fail.wav and pass.wav are from Sully, A Very Serious RPG ( https://sullyrpg.com ) and are used here with permission from Breadbros Games
+(Note: old code needs to be cleaned out)
 """
 
 from __future__ import annotations
 
+import argparse
 import os
 import platform
 import subprocess
 import sys
+
+import requests
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Check URL accessibility")
+    parser.add_argument("--url-alive", type=str, help="URL to check if alive")
+    parser.add_argument("--url-fail", type=str, help="URL to check if fail")
+    parser.add_argument("--url-pass", type=str, help="URL to check if pass")
+
+    args = parser.parse_args()
+    return args
+
+
+def is_url_accessible(url, timeout):
+    try:
+        response = requests.get(url, timeout=timeout)
+        return response.status_code == 200
+    except requests.RequestException:
+        return False
+
+
+# Example usage:
+url = "http://SWORDFISH:22222"
+timeout = 5  # seconds
+
+args = parse_args()
+
+url_alive = args.url_alive
+url_fail = args.url_fail
+url_pass = args.url_pass
+url_error = args.url_error
+
+print(f"url_alive: {url_alive}")
+print(f"url_fail: {url_fail}")
+print(f"url_pass: {url_pass}")
+print(f"url_error: {url_error}")
+
+missing_args = []
+
+if not url_alive:
+    missing_args.append("--url-alive")
+
+if not url_fail:
+    missing_args.append("--url-fail")
+
+if not url_pass:
+    missing_args.append("--url-fail")
+
+if not url_error:
+    missing_args.append("--url-error")
+
+if missing_args:
+    print(f"Missing required arguments: {missing_args}")
+    exit(1)
+
+is_alive = is_url_accessible(url_alive, timeout)
+if not is_alive:
+    print(f"URL {url_alive} is not accessible")
+    exit(1)
+
+
+# ##################################  old stuff vvv
 
 script_filepath = os.path.abspath(__file__)
 
@@ -52,7 +102,7 @@ def check_executable(filepath):
     # Check if the file is executable
     if not os.access(filepath, os.X_OK):
         print(f"The file '{filepath}' is not executable by the current process.")
-        return false
+        return False
 
     # File is executable, return True or perform additional actions
     return True
@@ -120,13 +170,13 @@ def play_sound(wav):
 
 
 def play_pass():
-    play_sound(pass_wav_path)
+    is_url_accessible(url_pass)
 
 def play_fail():
-    play_sound(fail_wav_path)
+    is_url_accessible(url_fail)
 
 def play_error():
-    play_sound(error_wav_path)
+    is_url_accessible(url_error)
 
 def env_check(name):
     if name in os.environ:
