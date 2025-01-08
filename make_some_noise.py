@@ -34,6 +34,8 @@ def is_url_accessible(url, timeout):
         return False
 
 
+print("Command and arguments passed:", sys.argv)
+
 # Example usage:
 url = "http://SWORDFISH:22222"
 timeout = 5  # seconds
@@ -107,13 +109,16 @@ def check_executable(filepath):
     # File is executable, return True or perform additional actions
     return True
 
+
 def is_linux():
     system_platform = platform.system()
     return system_platform == "Linux"
 
+
 def is_windows():
     system_platform = platform.system()
     return system_platform == "Windows"
+
 
 def is_mac():
     system_platform = platform.system()
@@ -122,7 +127,9 @@ def is_mac():
 
 if not (is_windows() or is_mac() or is_linux()):
     print(
-        "The current OS ("+platform.system()+") is not supported at this time. Failing"
+        "The current OS ("
+        + platform.system()
+        + ") is not supported at this time. Failing"
     )
     sys.exit(5)
 
@@ -172,11 +179,14 @@ def play_sound(wav):
 def play_pass():
     is_url_accessible(url_pass)
 
+
 def play_fail():
     is_url_accessible(url_fail)
 
+
 def play_error():
     is_url_accessible(url_error)
+
 
 def env_check(name):
     if name in os.environ:
@@ -199,6 +209,7 @@ if not is_valid:
     play_error()
     sys.exit(1)
 
+
 def converter(name):
     try:
         return int(os.environ[name])
@@ -216,10 +227,10 @@ if idx == -1 or total == -1 or retval == -1:
     play_error()
     sys.exit(2)
 
-if(is_mac() or is_linux()): #linux and macs report reverse order?
+if is_mac() or is_linux():  # linux and macs report reverse order?
     if idx != 0:
         print(
-            f"This hook was not the last pre-commit hook installed, which it needs to be. failing"
+            "This hook was not the last pre-commit hook installed, which it needs to be. failing"
         )
         play_error()
         sys.exit(7)
