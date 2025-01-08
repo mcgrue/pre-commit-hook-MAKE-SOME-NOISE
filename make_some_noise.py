@@ -28,7 +28,7 @@ def parse_args():
     return args, unknown
 
 
-def is_url_accessible(url, timeout):
+def is_url_accessible(url, timeout=5):
     try:
         response = requests.get(url, timeout=timeout)
         return response.status_code == 200
@@ -42,7 +42,7 @@ print("Command and arguments passed:", sys.argv)
 url = "http://SWORDFISH:22222"
 timeout = 5  # seconds
 
-args = parse_args()
+args, unknown = parse_args()
 
 url_alive = args.url_alive
 url_fail = args.url_fail
