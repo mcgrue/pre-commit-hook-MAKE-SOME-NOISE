@@ -22,9 +22,10 @@ def parse_args():
     parser.add_argument("--url-fail", type=str, help="URL to check if fail")
     parser.add_argument("--url-pass", type=str, help="URL to check if pass")
     parser.add_argument("--url-error", type=str, help="URL to check if error")
+    parser.add_argument(".pre-commit-config.yaml")
 
-    args = parser.parse_args()
-    return args
+    args, unknown = parser.parse_known_args()
+    return args, unknown
 
 
 def is_url_accessible(url, timeout):
